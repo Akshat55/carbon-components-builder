@@ -24,7 +24,7 @@ jobs:
 
       # cache node modules to spend less time installing dependencies
       - name: Get npm cache directory
-        id: npm-cache-dir
+        id: cache-npm
         uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
@@ -38,7 +38,7 @@ jobs:
 
       # If no cache-hit, install dependencies
       - name: Install dependencies
-        if: steps.npm-cache-dir.outputs.cache-hit != 'true'
+        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         run: npm install
 
       # Build the react app, linting errors will be included in build
