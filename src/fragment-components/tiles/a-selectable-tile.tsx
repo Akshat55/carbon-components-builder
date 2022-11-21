@@ -186,7 +186,7 @@ export const ASelectableTile = ({
 					</SelectableTile>
 			</AComponent>
 		</Adder>
-	);
+	)
 };
 
 export const componentInfo: ComponentInfo = {
@@ -201,7 +201,7 @@ export const componentInfo: ComponentInfo = {
 		standalone: true,
 		disabled: false,
 		selected: false,
-		items: []
+		items: [],
 	},
 	render: ({ componentObj, select, remove, selected, onDragOver, onDrop, renderComponents, outline }) => <ASelectableTile
 		key={componentObj.id}
