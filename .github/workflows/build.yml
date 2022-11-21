@@ -1,0 +1,45 @@
+name: Check build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# Allows us to run this workflow manually from the Actions tab
+workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      # Checkout to branch
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # cache node modules to spend less time installing dependencies
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      # If no cache-hit, install dependencies
+      - name: Install dependencies
+        if: steps.npm-cache-dir.outputs.cache-hit != 'true'
+        run: npm install
+
+      # Build the react app, linting errors will be included in build
+      - name: Build site
+        run: npm run build
