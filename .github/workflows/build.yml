@@ -13,32 +13,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
-
     steps:
       # Checkout to branch
       - name: Checkout
         uses: actions/checkout@v3
 
-      # cache node modules to spend less time installing dependencies
-      - name: Get npm cache directory
-        id: cache-npm
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
+      # Set up node to use v16 & cache node modules
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          node-version: "16"
+          cache: "npm"
+          cache-dependency-path: "package-lock.json"
 
-      # If no cache-hit, install dependencies
+      # Install dependencies
       - name: Install dependencies
-        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         run: npm install
 
       # Build the react app, linting errors will be included in build
