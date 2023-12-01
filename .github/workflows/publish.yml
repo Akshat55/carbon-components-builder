@@ -51,7 +51,7 @@ jobs:
 
       # 1. Based on conventional commits, determine new version
       # 2. Create a tag
-      # 3. Release to github
+      # 3. Release to githubsdfs
       - name: Version
         run: |
           npm run nx run workspace:version
